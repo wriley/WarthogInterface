@@ -22,19 +22,10 @@ namespace ConfigBuilder
 
         private void frmOptions_Load(object sender, EventArgs e)
         {
-            cbActiveDevice.Items.Clear();
-
-            string[] discoveredJoysticks = parentForm.getJoystickNames();
-            
-            if (discoveredJoysticks != null)
-            {
-                cbActiveDevice.Items.AddRange(discoveredJoysticks);
-            }
         }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            parentForm.setJoystick(cbActiveDevice.SelectedItem.ToString());
             this.Dispose();
         }
     }

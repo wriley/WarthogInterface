@@ -8,7 +8,8 @@ namespace ConfigBuilder
     class Command
     {
         public string Name { get; set; }
-        public string ID { get; set; }
+        public string DeviceID { get; set; }
+        public string Button { get; set; }
         public string Rule { get; set; }
 
         public Command(string n)
@@ -16,10 +17,11 @@ namespace ConfigBuilder
             Name = n;
         }
 
-        public Command(string n, string i, string r)
+        public Command(string n, string i, string b, string r)
         {
             Name = n;
-            ID = i;
+            DeviceID = i;
+            Button = b;
             Rule = r;
         }
     }

@@ -9,7 +9,6 @@ using System.Windows.Forms;
 using EvaluationEngine;
 using IniFile;
 using System.Collections;
-using JoystickInterface;
 
 namespace ConfigBuilder
 {
@@ -21,12 +20,10 @@ namespace ConfigBuilder
         private EvaluationEngine.Evaluate.Evaluator _eval = null;
         private ArrayList _commands = new ArrayList();
         private Command _selectedCommand = null;
-        private Joystick _joystick = null;
-        private string _currentJoystick = null;
-
-        private static string S_ID = "ID";
+        
+        private static string S_ID = "DeviceID";
+        private static string S_BUTTON = "Button";
         private static string S_RULE = "Rule";
-        private static string S_JOYSTICK = "Joystick";
         private static string S_SETTINGS = "Settings";
 
         //for debug
@@ -58,16 +55,19 @@ namespace ConfigBuilder
             if (clear)
             {
                 tbName.Text = "";
-                tbID.Text = "";
+                tbDeviceID.Text = "";
+                tbButton.Text = "";
                 tbRule.Text = "";
                 lblDisplayValue.Text = "###";
             }
 
             tbName.Enabled = Enabled && (mode == 1);
-            tbID.Enabled = enable;
+            tbDeviceID.Enabled = enable;
+            tbButton.Enabled = enable;
             tbRule.Enabled = enable;
             btnTest.Enabled = enable;
             btnSave.Enabled = enable;
+            btnDelete.Enabled = enable;
 
         }
 
@@ -83,7 +83,7 @@ namespace ConfigBuilder
             }
 
 
-            Command c = new Command(tbName.Text, tbID.Text, tbRule.Text);
+            Command c = new Command(tbName.Text, tbDeviceID.Text, tbButton.Text, tbRule.Text);
             _commands.Add(c);
             _updateCommandList();
             _saveIni();
@@ -158,7 +158,14 @@ namespace ConfigBuilder
                 }
                 else
                 {
-                    lblDisplayValue.Text = _token.Variables["output"].VariableValue.ToString();
+                    if (_token.Variables.VariableExists("output"))
+                    {
+                        lblDisplayValue.Text = _token.Variables["output"].VariableValue.ToString();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Variable \"output\" was not found in the rule");
+                    }
                 }
             }
         }
@@ -171,9 +178,13 @@ namespace ConfigBuilder
                 if (_selectedCommand != null)
                 {
                     tbName.Text = _selectedCommand.Name;
-                    if (_selectedCommand.ID != null)
+                    if (_selectedCommand.DeviceID != null)
                     {
-                        tbID.Text = _selectedCommand.ID.ToString();
+                        tbDeviceID.Text = _selectedCommand.DeviceID.ToString();
+                    }
+                    if (_selectedCommand.Button != null)
+                    {
+                        tbButton.Text = _selectedCommand.Button.ToString();
                     }
                     if (_selectedCommand.Rule != null)
                     {
@@ -221,15 +232,10 @@ namespace ConfigBuilder
 
             foreach (Command c in _commands)
             {
-                _ifr.SetIniValue(c.Name, S_ID, c.ID);
+                _ifr.SetIniValue(c.Name, S_ID, c.DeviceID);
                 _ifr.SetIniValue(c.Name, S_RULE, c.Rule);
             }
-
-            if (_currentJoystick != null)
-            {
-                _ifr.SetIniValue(S_SETTINGS, S_JOYSTICK, _currentJoystick);
-            }
-
+            
             _ifr.Save();
         }
 
@@ -238,21 +244,14 @@ namespace ConfigBuilder
             _commands.Clear();
             foreach (string s in _ifr.AllSections)
             {
-                if (s == S_SETTINGS)
-                {
-                    string j = _ifr.GetIniValue(s, S_JOYSTICK);
-                    if (j != null)
-                    {
-                        _currentJoystick = j;
-                    }
-                }
-                else
+                if (s != S_SETTINGS)
                 {
                     string id = _ifr.GetIniValue(s, S_ID);
+                    string button = _ifr.GetIniValue(s, S_BUTTON);
                     string rule = _ifr.GetIniValue(s, S_RULE);
                     if ((id != null) && (rule != null))
                     {
-                        Command c = new Command(s, id, rule);
+                        Command c = new Command(s, id, button, rule);
                         _commands.Add(c);
                         _updateCommandList();
                     }
@@ -265,26 +264,24 @@ namespace ConfigBuilder
             _ifr = new IniFileReader(_myIniFileName, true);
             _ifr.OutputFilename = _myIniFileName;
             _loadIni();
-            if (_currentJoystick != null)
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Really delete?", "Confirm Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                if (_joystick.AcquireJoystick(_currentJoystick))
+                int i = _getCommandID(tbName.Text);
+
+                if (i >= 0)
                 {
+                    _commands.RemoveAt(i);
                 }
-                else
-                {
-                    MessageBox.Show("Could not acquire joystick: " + _currentJoystick);
-                }
+
+                _updateCommandList();
+                _saveIni();
+
+                _setInputFields(false, true);
             }
-        }
-
-        internal string[] getJoystickNames()
-        {
-            return _joystick.FindJoysticks();
-        }
-
-        internal void setJoystick(string p)
-        {
-            _currentJoystick = p;
         }
     }
 }

@@ -44,8 +44,8 @@
             this.lblValue = new System.Windows.Forms.Label();
             this.btnTest = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
-            this.lblID = new System.Windows.Forms.Label();
-            this.tbID = new System.Windows.Forms.TextBox();
+            this.lblDeviceID = new System.Windows.Forms.Label();
+            this.tbDeviceID = new System.Windows.Forms.TextBox();
             this.lblRule = new System.Windows.Forms.Label();
             this.tbRule = new System.Windows.Forms.TextBox();
             this.lblName = new System.Windows.Forms.Label();
@@ -53,6 +53,9 @@
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.checkBox4 = new System.Windows.Forms.CheckBox();
+            this.lblButton = new System.Windows.Forms.Label();
+            this.tbButton = new System.Windows.Forms.TextBox();
+            this.btnDelete = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -147,12 +150,15 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.btnDelete);
+            this.groupBox1.Controls.Add(this.tbButton);
+            this.groupBox1.Controls.Add(this.lblButton);
             this.groupBox1.Controls.Add(this.lblDisplayValue);
             this.groupBox1.Controls.Add(this.lblValue);
             this.groupBox1.Controls.Add(this.btnTest);
             this.groupBox1.Controls.Add(this.btnSave);
-            this.groupBox1.Controls.Add(this.lblID);
-            this.groupBox1.Controls.Add(this.tbID);
+            this.groupBox1.Controls.Add(this.lblDeviceID);
+            this.groupBox1.Controls.Add(this.tbDeviceID);
             this.groupBox1.Controls.Add(this.lblRule);
             this.groupBox1.Controls.Add(this.tbRule);
             this.groupBox1.Controls.Add(this.lblName);
@@ -167,7 +173,7 @@
             // lblDisplayValue
             // 
             this.lblDisplayValue.AutoSize = true;
-            this.lblDisplayValue.Location = new System.Drawing.Point(176, 219);
+            this.lblDisplayValue.Location = new System.Drawing.Point(176, 245);
             this.lblDisplayValue.Name = "lblDisplayValue";
             this.lblDisplayValue.Size = new System.Drawing.Size(28, 13);
             this.lblDisplayValue.TabIndex = 10;
@@ -176,7 +182,7 @@
             // lblValue
             // 
             this.lblValue.AutoSize = true;
-            this.lblValue.Location = new System.Drawing.Point(133, 219);
+            this.lblValue.Location = new System.Drawing.Point(133, 245);
             this.lblValue.Name = "lblValue";
             this.lblValue.Size = new System.Drawing.Size(37, 13);
             this.lblValue.TabIndex = 9;
@@ -185,7 +191,7 @@
             // btnTest
             // 
             this.btnTest.Enabled = false;
-            this.btnTest.Location = new System.Drawing.Point(78, 214);
+            this.btnTest.Location = new System.Drawing.Point(78, 240);
             this.btnTest.Name = "btnTest";
             this.btnTest.Size = new System.Drawing.Size(40, 23);
             this.btnTest.TabIndex = 4;
@@ -196,7 +202,7 @@
             // btnSave
             // 
             this.btnSave.Enabled = false;
-            this.btnSave.Location = new System.Drawing.Point(136, 352);
+            this.btnSave.Location = new System.Drawing.Point(95, 352);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
             this.btnSave.TabIndex = 5;
@@ -204,27 +210,27 @@
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
-            // lblID
+            // lblDeviceID
             // 
-            this.lblID.AutoSize = true;
-            this.lblID.Location = new System.Drawing.Point(54, 48);
-            this.lblID.Name = "lblID";
-            this.lblID.Size = new System.Drawing.Size(18, 13);
-            this.lblID.TabIndex = 7;
-            this.lblID.Text = "ID";
+            this.lblDeviceID.AutoSize = true;
+            this.lblDeviceID.Location = new System.Drawing.Point(20, 48);
+            this.lblDeviceID.Name = "lblDeviceID";
+            this.lblDeviceID.Size = new System.Drawing.Size(52, 13);
+            this.lblDeviceID.TabIndex = 7;
+            this.lblDeviceID.Text = "DeviceID";
             // 
-            // tbID
+            // tbDeviceID
             // 
-            this.tbID.Enabled = false;
-            this.tbID.Location = new System.Drawing.Point(78, 45);
-            this.tbID.Name = "tbID";
-            this.tbID.Size = new System.Drawing.Size(70, 20);
-            this.tbID.TabIndex = 2;
+            this.tbDeviceID.Enabled = false;
+            this.tbDeviceID.Location = new System.Drawing.Point(78, 45);
+            this.tbDeviceID.Name = "tbDeviceID";
+            this.tbDeviceID.Size = new System.Drawing.Size(70, 20);
+            this.tbDeviceID.TabIndex = 2;
             // 
             // lblRule
             // 
             this.lblRule.AutoSize = true;
-            this.lblRule.Location = new System.Drawing.Point(43, 74);
+            this.lblRule.Location = new System.Drawing.Point(43, 100);
             this.lblRule.Name = "lblRule";
             this.lblRule.Size = new System.Drawing.Size(29, 13);
             this.lblRule.TabIndex = 5;
@@ -233,7 +239,7 @@
             // tbRule
             // 
             this.tbRule.Enabled = false;
-            this.tbRule.Location = new System.Drawing.Point(78, 71);
+            this.tbRule.Location = new System.Drawing.Point(78, 97);
             this.tbRule.Multiline = true;
             this.tbRule.Name = "tbRule";
             this.tbRule.Size = new System.Drawing.Size(263, 137);
@@ -288,6 +294,34 @@
             this.checkBox4.Text = "4";
             this.checkBox4.UseVisualStyleBackColor = true;
             // 
+            // lblButton
+            // 
+            this.lblButton.AutoSize = true;
+            this.lblButton.Location = new System.Drawing.Point(34, 74);
+            this.lblButton.Name = "lblButton";
+            this.lblButton.Size = new System.Drawing.Size(38, 13);
+            this.lblButton.TabIndex = 11;
+            this.lblButton.Text = "Button";
+            // 
+            // tbButton
+            // 
+            this.tbButton.Enabled = false;
+            this.tbButton.Location = new System.Drawing.Point(78, 71);
+            this.tbButton.Name = "tbButton";
+            this.tbButton.Size = new System.Drawing.Size(70, 20);
+            this.tbButton.TabIndex = 12;
+            // 
+            // btnDelete
+            // 
+            this.btnDelete.Enabled = false;
+            this.btnDelete.Location = new System.Drawing.Point(176, 352);
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(75, 23);
+            this.btnDelete.TabIndex = 13;
+            this.btnDelete.Text = "Delete";
+            this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -329,8 +363,8 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.TextBox tbName;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label lblID;
-        private System.Windows.Forms.TextBox tbID;
+        private System.Windows.Forms.Label lblDeviceID;
+        private System.Windows.Forms.TextBox tbDeviceID;
         private System.Windows.Forms.Label lblRule;
         private System.Windows.Forms.TextBox tbRule;
         private System.Windows.Forms.Label lblName;
@@ -342,6 +376,9 @@
         private System.Windows.Forms.CheckBox checkBox2;
         private System.Windows.Forms.CheckBox checkBox3;
         private System.Windows.Forms.CheckBox checkBox4;
+        private System.Windows.Forms.TextBox tbButton;
+        private System.Windows.Forms.Label lblButton;
+        private System.Windows.Forms.Button btnDelete;
     }
 }
 
