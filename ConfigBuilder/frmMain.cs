@@ -9,8 +9,9 @@ using System.Windows.Forms;
 using EvaluationEngine;
 using IniFile;
 using System.Collections;
+using WarthogInterface;
 
-namespace ConfigBuilder
+namespace WarthogInterface
 {
     public partial class frmMain : Form
     {
@@ -27,7 +28,7 @@ namespace ConfigBuilder
         private static string S_SETTINGS = "Settings";
 
         //for debug
-        bool[] inputs = new bool[4];
+        bool[] inputs = new bool[8];
 
         public frmMain()
         {
@@ -111,6 +112,10 @@ namespace ConfigBuilder
             inputs[1] = checkBox2.Checked;
             inputs[2] = checkBox3.Checked;
             inputs[3] = checkBox4.Checked;
+            inputs[4] = checkBox5.Checked;
+            inputs[5] = checkBox6.Checked;
+            inputs[6] = checkBox7.Checked;
+            inputs[7] = checkBox8.Checked;
 
             try
             {
@@ -146,7 +151,10 @@ namespace ConfigBuilder
                             MessageBox.Show("Error parsing variable name: " + ex.Message);
                             return;
                         }
-                        v.VariableValue = inputs[i].ToString();
+                        if (i < inputs.Count())
+                        {
+                            v.VariableValue = inputs[i].ToString();
+                        }
                     }
                 }
 
@@ -233,6 +241,7 @@ namespace ConfigBuilder
             foreach (Command c in _commands)
             {
                 _ifr.SetIniValue(c.Name, S_ID, c.DeviceID);
+                _ifr.SetIniValue(c.Name, S_BUTTON, c.Button);
                 _ifr.SetIniValue(c.Name, S_RULE, c.Rule);
             }
             

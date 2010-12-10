@@ -5,7 +5,7 @@ using System.Text;
 
 namespace WarthogInterface
 {
-    class Command
+    public class Command
     {
         public string Name { get; set; }
         public string DeviceID { get; set; }

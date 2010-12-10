@@ -1,4 +1,4 @@
-﻿namespace ConfigBuilder
+﻿namespace WarthogInterface
 {
     partial class frmMain
     {
@@ -40,6 +40,9 @@
             this.lbCommands = new System.Windows.Forms.ListBox();
             this.tbName = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnDelete = new System.Windows.Forms.Button();
+            this.tbButton = new System.Windows.Forms.TextBox();
+            this.lblButton = new System.Windows.Forms.Label();
             this.lblDisplayValue = new System.Windows.Forms.Label();
             this.lblValue = new System.Windows.Forms.Label();
             this.btnTest = new System.Windows.Forms.Button();
@@ -53,9 +56,10 @@
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.checkBox4 = new System.Windows.Forms.CheckBox();
-            this.lblButton = new System.Windows.Forms.Label();
-            this.tbButton = new System.Windows.Forms.TextBox();
-            this.btnDelete = new System.Windows.Forms.Button();
+            this.checkBox5 = new System.Windows.Forms.CheckBox();
+            this.checkBox6 = new System.Windows.Forms.CheckBox();
+            this.checkBox7 = new System.Windows.Forms.CheckBox();
+            this.checkBox8 = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -170,6 +174,34 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Output Settings";
             // 
+            // btnDelete
+            // 
+            this.btnDelete.Enabled = false;
+            this.btnDelete.Location = new System.Drawing.Point(176, 352);
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(75, 23);
+            this.btnDelete.TabIndex = 7;
+            this.btnDelete.Text = "Delete";
+            this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            // 
+            // tbButton
+            // 
+            this.tbButton.Enabled = false;
+            this.tbButton.Location = new System.Drawing.Point(78, 71);
+            this.tbButton.Name = "tbButton";
+            this.tbButton.Size = new System.Drawing.Size(70, 20);
+            this.tbButton.TabIndex = 3;
+            // 
+            // lblButton
+            // 
+            this.lblButton.AutoSize = true;
+            this.lblButton.Location = new System.Drawing.Point(34, 74);
+            this.lblButton.Name = "lblButton";
+            this.lblButton.Size = new System.Drawing.Size(38, 13);
+            this.lblButton.TabIndex = 11;
+            this.lblButton.Text = "Button";
+            // 
             // lblDisplayValue
             // 
             this.lblDisplayValue.AutoSize = true;
@@ -194,7 +226,7 @@
             this.btnTest.Location = new System.Drawing.Point(78, 240);
             this.btnTest.Name = "btnTest";
             this.btnTest.Size = new System.Drawing.Size(40, 23);
-            this.btnTest.TabIndex = 4;
+            this.btnTest.TabIndex = 5;
             this.btnTest.Text = "Test";
             this.btnTest.UseVisualStyleBackColor = true;
             this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
@@ -205,7 +237,7 @@
             this.btnSave.Location = new System.Drawing.Point(95, 352);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
-            this.btnSave.TabIndex = 5;
+            this.btnSave.TabIndex = 6;
             this.btnSave.Text = "Save";
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
@@ -243,7 +275,7 @@
             this.tbRule.Multiline = true;
             this.tbRule.Name = "tbRule";
             this.tbRule.Size = new System.Drawing.Size(263, 137);
-            this.tbRule.TabIndex = 3;
+            this.tbRule.TabIndex = 4;
             // 
             // lblName
             // 
@@ -290,43 +322,59 @@
             this.checkBox4.Location = new System.Drawing.Point(126, 437);
             this.checkBox4.Name = "checkBox4";
             this.checkBox4.Size = new System.Drawing.Size(32, 17);
-            this.checkBox4.TabIndex = 6;
+            this.checkBox4.TabIndex = 0;
             this.checkBox4.Text = "4";
             this.checkBox4.UseVisualStyleBackColor = true;
             // 
-            // lblButton
+            // checkBox5
             // 
-            this.lblButton.AutoSize = true;
-            this.lblButton.Location = new System.Drawing.Point(34, 74);
-            this.lblButton.Name = "lblButton";
-            this.lblButton.Size = new System.Drawing.Size(38, 13);
-            this.lblButton.TabIndex = 11;
-            this.lblButton.Text = "Button";
+            this.checkBox5.AutoSize = true;
+            this.checkBox5.Location = new System.Drawing.Point(164, 437);
+            this.checkBox5.Name = "checkBox5";
+            this.checkBox5.Size = new System.Drawing.Size(32, 17);
+            this.checkBox5.TabIndex = 0;
+            this.checkBox5.Text = "5";
+            this.checkBox5.UseVisualStyleBackColor = true;
             // 
-            // tbButton
+            // checkBox6
             // 
-            this.tbButton.Enabled = false;
-            this.tbButton.Location = new System.Drawing.Point(78, 71);
-            this.tbButton.Name = "tbButton";
-            this.tbButton.Size = new System.Drawing.Size(70, 20);
-            this.tbButton.TabIndex = 12;
+            this.checkBox6.AutoSize = true;
+            this.checkBox6.Location = new System.Drawing.Point(202, 437);
+            this.checkBox6.Name = "checkBox6";
+            this.checkBox6.Size = new System.Drawing.Size(32, 17);
+            this.checkBox6.TabIndex = 0;
+            this.checkBox6.Text = "6";
+            this.checkBox6.UseVisualStyleBackColor = true;
             // 
-            // btnDelete
+            // checkBox7
             // 
-            this.btnDelete.Enabled = false;
-            this.btnDelete.Location = new System.Drawing.Point(176, 352);
-            this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(75, 23);
-            this.btnDelete.TabIndex = 13;
-            this.btnDelete.Text = "Delete";
-            this.btnDelete.UseVisualStyleBackColor = true;
-            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            this.checkBox7.AutoSize = true;
+            this.checkBox7.Location = new System.Drawing.Point(240, 437);
+            this.checkBox7.Name = "checkBox7";
+            this.checkBox7.Size = new System.Drawing.Size(32, 17);
+            this.checkBox7.TabIndex = 0;
+            this.checkBox7.Text = "7";
+            this.checkBox7.UseVisualStyleBackColor = true;
+            // 
+            // checkBox8
+            // 
+            this.checkBox8.AutoSize = true;
+            this.checkBox8.Location = new System.Drawing.Point(278, 437);
+            this.checkBox8.Name = "checkBox8";
+            this.checkBox8.Size = new System.Drawing.Size(32, 17);
+            this.checkBox8.TabIndex = 0;
+            this.checkBox8.Text = "8";
+            this.checkBox8.UseVisualStyleBackColor = true;
             // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(579, 478);
+            this.Controls.Add(this.checkBox5);
+            this.Controls.Add(this.checkBox6);
+            this.Controls.Add(this.checkBox7);
+            this.Controls.Add(this.checkBox8);
             this.Controls.Add(this.checkBox4);
             this.Controls.Add(this.checkBox3);
             this.Controls.Add(this.checkBox2);
@@ -379,6 +427,10 @@
         private System.Windows.Forms.TextBox tbButton;
         private System.Windows.Forms.Label lblButton;
         private System.Windows.Forms.Button btnDelete;
+        private System.Windows.Forms.CheckBox checkBox5;
+        private System.Windows.Forms.CheckBox checkBox6;
+        private System.Windows.Forms.CheckBox checkBox7;
+        private System.Windows.Forms.CheckBox checkBox8;
     }
 }
 

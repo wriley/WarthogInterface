@@ -1,4 +1,4 @@
-﻿namespace ConfigBuilder
+﻿namespace WarthogInterface
 {
     partial class frmOptions
     {

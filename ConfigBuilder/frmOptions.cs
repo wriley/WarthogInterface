@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace ConfigBuilder
+namespace WarthogInterface
 {
     public partial class frmOptions : Form
     {
