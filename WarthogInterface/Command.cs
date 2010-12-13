@@ -11,6 +11,8 @@ namespace WarthogInterface
         public string DeviceID { get; set; }
         public string Button { get; set; }
         public string Rule { get; set; }
+        public string LastOutput { get; set; }
+        public string CurrentOutput { get; set; }
 
         public Command(string n)
         {
