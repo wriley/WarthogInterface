@@ -6,6 +6,7 @@ using JoystickInterface;
 using System.Net.Sockets;
 using System.Text;
 using WarthogInterface;
+using System.Threading;
 
 namespace WarthogInterface
 {
@@ -22,7 +23,9 @@ namespace WarthogInterface
         private int _port = -1;
         private UdpClient _udpClient;
         private bool _started = false;
-
+        private double _activityRate = 0;
+        private int _activityCounter = 0;
+        
         private const string S_ID           = "DeviceID";
         private const string S_RULE         = "Rule";
         private const string S_BUTTON       = "Button";
@@ -38,18 +41,17 @@ namespace WarthogInterface
 
         private void frmMain_Load(object sender, EventArgs e)
         {
-            _iniFileReader = new IniFileReader(_myIniFileName, true);
-            _iniFileReader.OutputFilename = _myIniFileName;
+            bool firstInstance;
+            Mutex mutex = new Mutex(false, "Local\\HogDaemon", out firstInstance);
+
+            if (!firstInstance)
+            {
+                MessageBox.Show("There is already an instance running, exiting!");
+                Application.Exit();
+            }
+
             _loadIni();
             _joystick = new Joystick(this.Handle);
-            try
-            {
-                _udpClient = new UdpClient(_hostname, _port);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error connecting: " + ex.Message.ToString());
-            }
             updateDeviceList();
         }
 
@@ -80,19 +82,14 @@ namespace WarthogInterface
         private void cbActiveDevice_SelectedIndexChanged(object sender, EventArgs e)
         {
             _selectedJoystick = cbActiveDevice.Items[cbActiveDevice.SelectedIndex].ToString();
-
-            if (_joystick.AcquireJoystick(_selectedJoystick))
-            {
-            }
-            else
-            {
-                MessageBox.Show("Error: could not acquire joystick " + _selectedJoystick);
-                _selectedJoystick = null;
-            }
+            connectJoystick();
         }
 
         private void _loadIni()
         {
+            _iniFileReader = new IniFileReader(_myIniFileName, true);
+            _iniFileReader.OutputFilename = _myIniFileName;
+
             _commands.Clear();
             foreach (string s in _iniFileReader.AllSections)
             {
@@ -126,7 +123,7 @@ namespace WarthogInterface
                         string id = _iniFileReader.GetIniValue(s, S_ID);
                         string button = _iniFileReader.GetIniValue(s, S_BUTTON);
                         string rule = _iniFileReader.GetIniValue(s, S_RULE);
-                        if ((id != null) && (rule != null))
+                        if (id != null)
                         {
                             Command c = new Command(s, id, button, rule);
                             _commands.Add(c);
@@ -135,11 +132,10 @@ namespace WarthogInterface
                 }
             }
 
-            if ((_hostname != null) && (_port != -1))
-            {
-                tsslHostPort.Text = _hostname + ":" + _port.ToString();
-            }
-            tsslRules.Text = _commands.Count.ToString() + " Rules";
+            tbHostname.Text = _hostname;
+            tbPort.Text = _port.ToString();
+
+            lblRulesNum.Text = _commands.Count.ToString();
         }
 
         private void backgroundWorker1_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
@@ -214,7 +210,22 @@ namespace WarthogInterface
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
+            DateTime start = DateTime.UtcNow;
             sendToNetwork();
+            DateTime stop = DateTime.UtcNow;
+            TimeSpan t = stop - start;
+            if (t.TotalMilliseconds > 0)
+            {
+                double r = (_commands.Count / t.TotalMilliseconds) * 1000;
+                _activityRate += r;
+                _activityRate /= 2;
+            }
+            _activityCounter++;
+            if (_activityCounter == (int)(1000 / timer1.Interval))
+            {
+                lblCmdNum.Text = _activityRate.ToString("f0");
+                _activityCounter = 0;
+            }
         }
 
         private void sendToNetwork()
@@ -225,7 +236,15 @@ namespace WarthogInterface
                 {
                     string sendString = "C" + c.DeviceID + "," + c.Button + "," + c.CurrentOutput;
                     Byte[] sendBytes = Encoding.ASCII.GetBytes(sendString);
-                    _udpClient.Send(sendBytes, sendBytes.Length);
+                    try
+                    {
+                        _udpClient.Send(sendBytes, sendBytes.Length);
+                    }
+                    catch (Exception ex)
+                    {
+                        _stop();
+                        MessageBox.Show("Error sending to network: " + ex.Message.ToString());
+                    }
                 }
             }
         }
@@ -238,20 +257,102 @@ namespace WarthogInterface
             }
         }
 
+        private void _stop()
+        {
+            timer1.Enabled = false;
+            lblCmdNum.Text = "0";
+            _started = false;
+            _setInputs(true);
+            btnStartStop.Text = "Start";
+            _udpClient.Close();
+        }
+
+        private void _start()
+        {
+            timer1.Enabled = true;
+            _started = true;
+            _setInputs(false);
+            btnStartStop.Text = "Stop";
+            try
+            {
+                _udpClient = new UdpClient(_hostname, _port);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error connecting to " + _hostname + ":" + _port.ToString() + "\n" + ex.Message.ToString());
+            }
+        }
+
+        private void _setInputs(bool mode)
+        {
+            cbActiveDevice.Enabled = mode;
+            tbHostname.Enabled = mode;
+            tbPort.Enabled = mode;
+            btnReload.Enabled = mode;
+            btnSave.Enabled = mode;
+        }
+
         private void btnStartStop_Click(object sender, EventArgs e)
         {
             if (_started)
             {
-                timer1.Enabled = false;
-                btnStartStop.Text = "Start";
-                _started = false;
+                _stop();
             }
             else
             {
-                timer1.Enabled = true;
-                btnStartStop.Text = "Stop";
-                _started = true;
+                _start();
             }
+        }
+
+        private void btnReload_Click(object sender, EventArgs e)
+        {
+            string lastJoystick = _selectedJoystick;
+            _loadIni();
+            if (_selectedJoystick != lastJoystick)
+            {
+                connectJoystick();
+            }
+        }
+
+        private void connectJoystick()
+        {
+            if (_joystick.AcquireJoystick(_selectedJoystick))
+            {
+                // yay?
+            }
+            else
+            {
+                MessageBox.Show("Error: could not acquire joystick " + _selectedJoystick);
+                _selectedJoystick = null;
+            }
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            _iniFileReader = new IniFileReader(_myIniFileName, true);
+            _iniFileReader.OutputFilename = _myIniFileName;
+            if (tbHostname.Text.Length > 0)
+            {
+                _iniFileReader.SetIniValue(S_SETTINGS, S_HOSTNAME, tbHostname.Text);
+                _hostname = tbHostname.Text;
+            }
+            if (tbPort.Text.Length > 0)
+            {
+                _iniFileReader.SetIniValue(S_SETTINGS, S_PORT, tbPort.Text);
+                try
+                {
+                    _port = Int32.Parse(tbPort.Text);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error setting port to " + tbPort.Text.ToString() + ": " + ex.Message.ToString());
+                }
+            }
+            if (cbActiveDevice.SelectedIndex >= 0)
+            {
+                _iniFileReader.SetIniValue(S_SETTINGS, S_JOYSTICK, cbActiveDevice.SelectedValue.ToString());
+            }
+            _iniFileReader.Save();
         }
     }
 }

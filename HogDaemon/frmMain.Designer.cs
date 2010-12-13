@@ -34,11 +34,16 @@
             this.cbActiveDevice = new System.Windows.Forms.ComboBox();
             this.lblActiveDevice = new System.Windows.Forms.Label();
             this.btnStartStop = new System.Windows.Forms.Button();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.tsslHostPort = new System.Windows.Forms.ToolStripStatusLabel();
-            this.tsslRules = new System.Windows.Forms.ToolStripStatusLabel();
-            this.tsslActivity = new System.Windows.Forms.ToolStripStatusLabel();
-            this.statusStrip1.SuspendLayout();
+            this.btnReload = new System.Windows.Forms.Button();
+            this.lblHostname = new System.Windows.Forms.Label();
+            this.tbHostname = new System.Windows.Forms.TextBox();
+            this.btnSave = new System.Windows.Forms.Button();
+            this.tbPort = new System.Windows.Forms.TextBox();
+            this.lblPort = new System.Windows.Forms.Label();
+            this.lblRules = new System.Windows.Forms.Label();
+            this.lblRulesNum = new System.Windows.Forms.Label();
+            this.lblCmdNum = new System.Windows.Forms.Label();
+            this.lblCmd = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // backgroundWorker1
@@ -55,7 +60,7 @@
             this.cbActiveDevice.FormattingEnabled = true;
             this.cbActiveDevice.Location = new System.Drawing.Point(92, 12);
             this.cbActiveDevice.Name = "cbActiveDevice";
-            this.cbActiveDevice.Size = new System.Drawing.Size(221, 21);
+            this.cbActiveDevice.Size = new System.Drawing.Size(188, 21);
             this.cbActiveDevice.TabIndex = 10;
             // 
             // lblActiveDevice
@@ -69,7 +74,7 @@
             // 
             // btnStartStop
             // 
-            this.btnStartStop.Location = new System.Drawing.Point(125, 49);
+            this.btnStartStop.Location = new System.Drawing.Point(108, 179);
             this.btnStartStop.Name = "btnStartStop";
             this.btnStartStop.Size = new System.Drawing.Size(75, 23);
             this.btnStartStop.TabIndex = 12;
@@ -77,52 +82,116 @@
             this.btnStartStop.UseVisualStyleBackColor = true;
             this.btnStartStop.Click += new System.EventHandler(this.btnStartStop_Click);
             // 
-            // statusStrip1
+            // btnReload
             // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsslActivity,
-            this.tsslHostPort,
-            this.tsslRules});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 186);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(325, 22);
-            this.statusStrip1.TabIndex = 13;
-            this.statusStrip1.Text = "statusStrip1";
+            this.btnReload.Location = new System.Drawing.Point(148, 91);
+            this.btnReload.Name = "btnReload";
+            this.btnReload.Size = new System.Drawing.Size(75, 23);
+            this.btnReload.TabIndex = 14;
+            this.btnReload.Text = "Reload";
+            this.btnReload.UseVisualStyleBackColor = true;
+            this.btnReload.Click += new System.EventHandler(this.btnReload_Click);
             // 
-            // tsslHostPort
+            // lblHostname
             // 
-            this.tsslHostPort.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.tsslHostPort.Name = "tsslHostPort";
-            this.tsslHostPort.Size = new System.Drawing.Size(78, 17);
-            this.tsslHostPort.Text = "hostname:port";
+            this.lblHostname.AutoSize = true;
+            this.lblHostname.Location = new System.Drawing.Point(31, 42);
+            this.lblHostname.Name = "lblHostname";
+            this.lblHostname.Size = new System.Drawing.Size(55, 13);
+            this.lblHostname.TabIndex = 15;
+            this.lblHostname.Text = "Hostname";
             // 
-            // tsslRules
+            // tbHostname
             // 
-            this.tsslRules.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.tsslRules.Name = "tsslRules";
-            this.tsslRules.Size = new System.Drawing.Size(42, 17);
-            this.tsslRules.Text = "0 Rules";
+            this.tbHostname.Location = new System.Drawing.Point(92, 39);
+            this.tbHostname.Name = "tbHostname";
+            this.tbHostname.Size = new System.Drawing.Size(161, 20);
+            this.tbHostname.TabIndex = 16;
             // 
-            // tsslActivity
+            // btnSave
             // 
-            this.tsslActivity.Name = "tsslActivity";
-            this.tsslActivity.Size = new System.Drawing.Size(13, 17);
-            this.tsslActivity.Text = "0";
+            this.btnSave.Location = new System.Drawing.Point(67, 91);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(75, 23);
+            this.btnSave.TabIndex = 17;
+            this.btnSave.Text = "Save";
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
+            // tbPort
+            // 
+            this.tbPort.Location = new System.Drawing.Point(92, 65);
+            this.tbPort.Name = "tbPort";
+            this.tbPort.Size = new System.Drawing.Size(50, 20);
+            this.tbPort.TabIndex = 19;
+            // 
+            // lblPort
+            // 
+            this.lblPort.AutoSize = true;
+            this.lblPort.Location = new System.Drawing.Point(60, 68);
+            this.lblPort.Name = "lblPort";
+            this.lblPort.Size = new System.Drawing.Size(26, 13);
+            this.lblPort.TabIndex = 18;
+            this.lblPort.Text = "Port";
+            // 
+            // lblRules
+            // 
+            this.lblRules.AutoSize = true;
+            this.lblRules.Location = new System.Drawing.Point(88, 130);
+            this.lblRules.Name = "lblRules";
+            this.lblRules.Size = new System.Drawing.Size(73, 13);
+            this.lblRules.TabIndex = 20;
+            this.lblRules.Text = "Rules Loaded";
+            // 
+            // lblRulesNum
+            // 
+            this.lblRulesNum.AutoSize = true;
+            this.lblRulesNum.Location = new System.Drawing.Point(167, 130);
+            this.lblRulesNum.Name = "lblRulesNum";
+            this.lblRulesNum.Size = new System.Drawing.Size(13, 13);
+            this.lblRulesNum.TabIndex = 21;
+            this.lblRulesNum.Text = "0";
+            // 
+            // lblCmdNum
+            // 
+            this.lblCmdNum.AutoSize = true;
+            this.lblCmdNum.Location = new System.Drawing.Point(167, 143);
+            this.lblCmdNum.Name = "lblCmdNum";
+            this.lblCmdNum.Size = new System.Drawing.Size(13, 13);
+            this.lblCmdNum.TabIndex = 23;
+            this.lblCmdNum.Text = "0";
+            // 
+            // lblCmd
+            // 
+            this.lblCmd.AutoSize = true;
+            this.lblCmd.Location = new System.Drawing.Point(60, 143);
+            this.lblCmd.Name = "lblCmd";
+            this.lblCmd.Size = new System.Drawing.Size(101, 13);
+            this.lblCmd.TabIndex = 22;
+            this.lblCmd.Text = "Commands/Second";
             // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(325, 208);
-            this.Controls.Add(this.statusStrip1);
+            this.ClientSize = new System.Drawing.Size(290, 214);
+            this.Controls.Add(this.lblCmdNum);
+            this.Controls.Add(this.lblCmd);
+            this.Controls.Add(this.lblRulesNum);
+            this.Controls.Add(this.lblRules);
+            this.Controls.Add(this.tbPort);
+            this.Controls.Add(this.lblPort);
+            this.Controls.Add(this.btnSave);
+            this.Controls.Add(this.tbHostname);
+            this.Controls.Add(this.lblHostname);
+            this.Controls.Add(this.btnReload);
             this.Controls.Add(this.btnStartStop);
             this.Controls.Add(this.lblActiveDevice);
             this.Controls.Add(this.cbActiveDevice);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Name = "frmMain";
             this.Text = "HogDaemon";
             this.Load += new System.EventHandler(this.frmMain_Load);
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -135,10 +204,16 @@
         private System.Windows.Forms.ComboBox cbActiveDevice;
         private System.Windows.Forms.Label lblActiveDevice;
         private System.Windows.Forms.Button btnStartStop;
-        private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.ToolStripStatusLabel tsslHostPort;
-        private System.Windows.Forms.ToolStripStatusLabel tsslRules;
-        private System.Windows.Forms.ToolStripStatusLabel tsslActivity;
+        private System.Windows.Forms.Button btnReload;
+        private System.Windows.Forms.Label lblHostname;
+        private System.Windows.Forms.TextBox tbHostname;
+        private System.Windows.Forms.Button btnSave;
+        private System.Windows.Forms.TextBox tbPort;
+        private System.Windows.Forms.Label lblPort;
+        private System.Windows.Forms.Label lblRules;
+        private System.Windows.Forms.Label lblRulesNum;
+        private System.Windows.Forms.Label lblCmdNum;
+        private System.Windows.Forms.Label lblCmd;
     }
 }
 
