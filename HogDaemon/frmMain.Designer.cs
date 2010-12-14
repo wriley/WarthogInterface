@@ -42,8 +42,8 @@
             this.lblPort = new System.Windows.Forms.Label();
             this.lblRules = new System.Windows.Forms.Label();
             this.lblRulesNum = new System.Windows.Forms.Label();
-            this.lblCmdNum = new System.Windows.Forms.Label();
-            this.lblCmd = new System.Windows.Forms.Label();
+            this.tbDebug = new System.Windows.Forms.TextBox();
+            this.btnSync = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // backgroundWorker1
@@ -57,11 +57,13 @@
             // 
             // cbActiveDevice
             // 
+            this.cbActiveDevice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbActiveDevice.FormattingEnabled = true;
             this.cbActiveDevice.Location = new System.Drawing.Point(92, 12);
             this.cbActiveDevice.Name = "cbActiveDevice";
-            this.cbActiveDevice.Size = new System.Drawing.Size(188, 21);
+            this.cbActiveDevice.Size = new System.Drawing.Size(186, 21);
             this.cbActiveDevice.TabIndex = 10;
+            this.cbActiveDevice.SelectedIndexChanged += new System.EventHandler(this.cbActiveDevice_SelectedIndexChanged);
             // 
             // lblActiveDevice
             // 
@@ -74,7 +76,7 @@
             // 
             // btnStartStop
             // 
-            this.btnStartStop.Location = new System.Drawing.Point(108, 179);
+            this.btnStartStop.Location = new System.Drawing.Point(67, 179);
             this.btnStartStop.Name = "btnStartStop";
             this.btnStartStop.Size = new System.Drawing.Size(75, 23);
             this.btnStartStop.TabIndex = 12;
@@ -152,31 +154,33 @@
             this.lblRulesNum.TabIndex = 21;
             this.lblRulesNum.Text = "0";
             // 
-            // lblCmdNum
+            // tbDebug
             // 
-            this.lblCmdNum.AutoSize = true;
-            this.lblCmdNum.Location = new System.Drawing.Point(167, 143);
-            this.lblCmdNum.Name = "lblCmdNum";
-            this.lblCmdNum.Size = new System.Drawing.Size(13, 13);
-            this.lblCmdNum.TabIndex = 23;
-            this.lblCmdNum.Text = "0";
+            this.tbDebug.Location = new System.Drawing.Point(12, 208);
+            this.tbDebug.Multiline = true;
+            this.tbDebug.Name = "tbDebug";
+            this.tbDebug.ReadOnly = true;
+            this.tbDebug.Size = new System.Drawing.Size(266, 146);
+            this.tbDebug.TabIndex = 24;
             // 
-            // lblCmd
+            // btnSync
             // 
-            this.lblCmd.AutoSize = true;
-            this.lblCmd.Location = new System.Drawing.Point(60, 143);
-            this.lblCmd.Name = "lblCmd";
-            this.lblCmd.Size = new System.Drawing.Size(101, 13);
-            this.lblCmd.TabIndex = 22;
-            this.lblCmd.Text = "Commands/Second";
+            this.btnSync.Enabled = false;
+            this.btnSync.Location = new System.Drawing.Point(148, 179);
+            this.btnSync.Name = "btnSync";
+            this.btnSync.Size = new System.Drawing.Size(75, 23);
+            this.btnSync.TabIndex = 25;
+            this.btnSync.Text = "Sync";
+            this.btnSync.UseVisualStyleBackColor = true;
+            this.btnSync.Click += new System.EventHandler(this.btnSync_Click);
             // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(290, 214);
-            this.Controls.Add(this.lblCmdNum);
-            this.Controls.Add(this.lblCmd);
+            this.ClientSize = new System.Drawing.Size(290, 366);
+            this.Controls.Add(this.btnSync);
+            this.Controls.Add(this.tbDebug);
             this.Controls.Add(this.lblRulesNum);
             this.Controls.Add(this.lblRules);
             this.Controls.Add(this.tbPort);
@@ -212,8 +216,8 @@
         private System.Windows.Forms.Label lblPort;
         private System.Windows.Forms.Label lblRules;
         private System.Windows.Forms.Label lblRulesNum;
-        private System.Windows.Forms.Label lblCmdNum;
-        private System.Windows.Forms.Label lblCmd;
+        private System.Windows.Forms.TextBox tbDebug;
+        private System.Windows.Forms.Button btnSync;
     }
 }
 

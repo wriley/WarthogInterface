@@ -23,9 +23,7 @@ namespace WarthogInterface
         private int _port = -1;
         private UdpClient _udpClient;
         private bool _started = false;
-        private double _activityRate = 0;
-        private int _activityCounter = 0;
-        
+
         private const string S_ID           = "DeviceID";
         private const string S_RULE         = "Rule";
         private const string S_BUTTON       = "Button";
@@ -50,9 +48,9 @@ namespace WarthogInterface
                 Application.Exit();
             }
 
-            _loadIni();
             _joystick = new Joystick(this.Handle);
             updateDeviceList();
+            _loadIni();
         }
 
         private void updateDeviceList()
@@ -134,14 +132,19 @@ namespace WarthogInterface
 
             tbHostname.Text = _hostname;
             tbPort.Text = _port.ToString();
-
             lblRulesNum.Text = _commands.Count.ToString();
+            int joyIndex = cbActiveDevice.FindString(_selectedJoystick, -1);
+            if (joyIndex >= 0)
+            {
+                cbActiveDevice.SelectedIndex = joyIndex;
+            }
         }
 
         private void backgroundWorker1_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
-            if ((_selectedJoystick != null) && (_joystick.Buttons.Length > 0))
+            if ((_selectedJoystick != null) && (_joystick.ButtonCount > 0))
             {
+                _joystick.UpdateStatus();
                 foreach (Command c in _commands)
                 {
 
@@ -181,7 +184,7 @@ namespace WarthogInterface
                                     return;
                                 }
 
-                                v.VariableValue = _joystick.Buttons[i] ? "1" : "0";
+                                v.VariableValue = _joystick.Buttons[i] ? "true" : "false";
                             }
                         }
 
@@ -193,14 +196,7 @@ namespace WarthogInterface
                         }
                         else
                         {
-                            if (c.LastOutput == null)
-                            {
-                                c.LastOutput = _token.Variables["output"].VariableValue.ToString();
-                            }
-                            else
-                            {
-                                c.LastOutput = c.CurrentOutput;
-                            }
+                            c.LastOutput = c.CurrentOutput;
                             c.CurrentOutput = _token.Variables["output"].VariableValue.ToString();
                         }
                     }
@@ -210,22 +206,7 @@ namespace WarthogInterface
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
-            DateTime start = DateTime.UtcNow;
             sendToNetwork();
-            DateTime stop = DateTime.UtcNow;
-            TimeSpan t = stop - start;
-            if (t.TotalMilliseconds > 0)
-            {
-                double r = (_commands.Count / t.TotalMilliseconds) * 1000;
-                _activityRate += r;
-                _activityRate /= 2;
-            }
-            _activityCounter++;
-            if (_activityCounter == (int)(1000 / timer1.Interval))
-            {
-                lblCmdNum.Text = _activityRate.ToString("f0");
-                _activityCounter = 0;
-            }
         }
 
         private void sendToNetwork()
@@ -235,6 +216,7 @@ namespace WarthogInterface
                 if (c.CurrentOutput != c.LastOutput)
                 {
                     string sendString = "C" + c.DeviceID + "," + c.Button + "," + c.CurrentOutput;
+                    logger("sendString: " + sendString);
                     Byte[] sendBytes = Encoding.ASCII.GetBytes(sendString);
                     try
                     {
@@ -260,10 +242,10 @@ namespace WarthogInterface
         private void _stop()
         {
             timer1.Enabled = false;
-            lblCmdNum.Text = "0";
             _started = false;
             _setInputs(true);
             btnStartStop.Text = "Start";
+            btnSync.Enabled = false;
             _udpClient.Close();
         }
 
@@ -273,6 +255,7 @@ namespace WarthogInterface
             _started = true;
             _setInputs(false);
             btnStartStop.Text = "Stop";
+            btnSync.Enabled = true;
             try
             {
                 _udpClient = new UdpClient(_hostname, _port);
@@ -318,7 +301,8 @@ namespace WarthogInterface
         {
             if (_joystick.AcquireJoystick(_selectedJoystick))
             {
-                // yay?
+                _joystick.UpdateStatus();
+                logger("Acquired joystick " + _selectedJoystick + " with " + _joystick.ButtonCount.ToString() + " buttons");
             }
             else
             {
@@ -331,11 +315,13 @@ namespace WarthogInterface
         {
             _iniFileReader = new IniFileReader(_myIniFileName, true);
             _iniFileReader.OutputFilename = _myIniFileName;
+
             if (tbHostname.Text.Length > 0)
             {
                 _iniFileReader.SetIniValue(S_SETTINGS, S_HOSTNAME, tbHostname.Text);
                 _hostname = tbHostname.Text;
             }
+
             if (tbPort.Text.Length > 0)
             {
                 _iniFileReader.SetIniValue(S_SETTINGS, S_PORT, tbPort.Text);
@@ -348,11 +334,37 @@ namespace WarthogInterface
                     MessageBox.Show("Error setting port to " + tbPort.Text.ToString() + ": " + ex.Message.ToString());
                 }
             }
+
             if (cbActiveDevice.SelectedIndex >= 0)
             {
-                _iniFileReader.SetIniValue(S_SETTINGS, S_JOYSTICK, cbActiveDevice.SelectedValue.ToString());
+                _iniFileReader.SetIniValue(S_SETTINGS, S_JOYSTICK, cbActiveDevice.SelectedItem.ToString());
             }
+
             _iniFileReader.Save();
+        }
+
+        private void logger(string s)
+        {
+            string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.ffff");
+            tbDebug.AppendText(timestamp + " " + s + "\r\n");
+        }
+
+        private void btnSync_Click(object sender, EventArgs e)
+        {
+            _syncAll();
+        }
+
+        private void _syncAll()
+        {
+            foreach (Command c in _commands)
+            {
+                c.LastOutput = "";
+            }
+
+            if (_started)
+            {
+                sendToNetwork();
+            }
         }
     }
 }

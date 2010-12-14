@@ -235,7 +235,10 @@ namespace WarthogInterface
         {
             foreach (string s in _ifr.AllSections)
             {
-                _ifr.SetIniValue(s, null, null);
+                if (s != S_SETTINGS)
+                {
+                    _ifr.SetIniValue(s, null, null);
+                }
             }
 
             foreach (Command c in _commands)
