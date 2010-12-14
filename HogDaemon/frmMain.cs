@@ -50,7 +50,7 @@ namespace WarthogInterface
 
             _joystick = new Joystick(this.Handle);
             updateDeviceList();
-            _loadIni();
+            loadINI();
         }
 
         private void updateDeviceList()
@@ -62,19 +62,6 @@ namespace WarthogInterface
                 cbActiveDevice.Items.Clear();
                 cbActiveDevice.Items.AddRange(discoveredJoysticks);
             }
-
-            if (_selectedJoystick != null)
-            {
-                try
-                {
-                    cbActiveDevice.SelectedValue = _selectedJoystick;
-                }
-                catch (InvalidOperationException ex)
-                {
-                    MessageBox.Show("Could not find " + _selectedJoystick + " in detected devices\n" + ex.Message.ToString());
-                    _selectedJoystick = null;
-                }
-            }
         }
 
         private void cbActiveDevice_SelectedIndexChanged(object sender, EventArgs e)
@@ -83,7 +70,7 @@ namespace WarthogInterface
             connectJoystick();
         }
 
-        private void _loadIni()
+        private void loadINI()
         {
             _iniFileReader = new IniFileReader(_myIniFileName, true);
             _iniFileReader.OutputFilename = _myIniFileName;
@@ -133,10 +120,19 @@ namespace WarthogInterface
             tbHostname.Text = _hostname;
             tbPort.Text = _port.ToString();
             lblRulesNum.Text = _commands.Count.ToString();
-            int joyIndex = cbActiveDevice.FindString(_selectedJoystick, -1);
-            if (joyIndex >= 0)
+
+            if (_selectedJoystick != null)
             {
-                cbActiveDevice.SelectedIndex = joyIndex;
+                int joyIndex = cbActiveDevice.FindString(_selectedJoystick, -1);
+                if (joyIndex >= 0)
+                {
+                    cbActiveDevice.SelectedIndex = joyIndex;
+                }
+                else
+                {
+                    MessageBox.Show("Error: Could not find device \"" + _selectedJoystick + "\" in detected devices\nPlease select a different device or connect \"" + _selectedJoystick + "\" and reopen this program");
+                    _selectedJoystick = null;
+                }
             }
         }
 
@@ -243,7 +239,7 @@ namespace WarthogInterface
         {
             timer1.Enabled = false;
             _started = false;
-            _setInputs(true);
+            setInputs(true);
             btnStartStop.Text = "Start";
             btnSync.Enabled = false;
             _udpClient.Close();
@@ -251,22 +247,29 @@ namespace WarthogInterface
 
         private void _start()
         {
-            timer1.Enabled = true;
-            _started = true;
-            _setInputs(false);
-            btnStartStop.Text = "Stop";
-            btnSync.Enabled = true;
-            try
+            if ((_selectedJoystick != null) && (_joystick.ButtonCount > 0))
             {
-                _udpClient = new UdpClient(_hostname, _port);
+                timer1.Enabled = true;
+                _started = true;
+                setInputs(false);
+                btnStartStop.Text = "Stop";
+                btnSync.Enabled = true;
+                try
+                {
+                    _udpClient = new UdpClient(_hostname, _port);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error connecting to " + _hostname + ":" + _port.ToString() + "\n" + ex.Message.ToString());
+                }
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show("Error connecting to " + _hostname + ":" + _port.ToString() + "\n" + ex.Message.ToString());
+                MessageBox.Show("Error: There is no active device!");
             }
         }
 
-        private void _setInputs(bool mode)
+        private void setInputs(bool mode)
         {
             cbActiveDevice.Enabled = mode;
             tbHostname.Enabled = mode;
@@ -290,7 +293,7 @@ namespace WarthogInterface
         private void btnReload_Click(object sender, EventArgs e)
         {
             string lastJoystick = _selectedJoystick;
-            _loadIni();
+            loadINI();
             if (_selectedJoystick != lastJoystick)
             {
                 connectJoystick();
