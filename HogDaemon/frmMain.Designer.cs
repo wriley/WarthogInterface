@@ -42,12 +42,12 @@
             this.lblPort = new System.Windows.Forms.Label();
             this.lblRules = new System.Windows.Forms.Label();
             this.lblRulesNum = new System.Windows.Forms.Label();
-            this.tbDebug = new System.Windows.Forms.TextBox();
             this.btnSync = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // backgroundWorker1
             // 
+            this.backgroundWorker1.WorkerSupportsCancellation = true;
             this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
             this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
             // 
@@ -76,7 +76,7 @@
             // 
             // btnStartStop
             // 
-            this.btnStartStop.Location = new System.Drawing.Point(67, 179);
+            this.btnStartStop.Location = new System.Drawing.Point(67, 155);
             this.btnStartStop.Name = "btnStartStop";
             this.btnStartStop.Size = new System.Drawing.Size(75, 23);
             this.btnStartStop.TabIndex = 12;
@@ -139,7 +139,7 @@
             // lblRules
             // 
             this.lblRules.AutoSize = true;
-            this.lblRules.Location = new System.Drawing.Point(88, 130);
+            this.lblRules.Location = new System.Drawing.Point(99, 117);
             this.lblRules.Name = "lblRules";
             this.lblRules.Size = new System.Drawing.Size(73, 13);
             this.lblRules.TabIndex = 20;
@@ -148,25 +148,16 @@
             // lblRulesNum
             // 
             this.lblRulesNum.AutoSize = true;
-            this.lblRulesNum.Location = new System.Drawing.Point(167, 130);
+            this.lblRulesNum.Location = new System.Drawing.Point(178, 117);
             this.lblRulesNum.Name = "lblRulesNum";
             this.lblRulesNum.Size = new System.Drawing.Size(13, 13);
             this.lblRulesNum.TabIndex = 21;
             this.lblRulesNum.Text = "0";
             // 
-            // tbDebug
-            // 
-            this.tbDebug.Location = new System.Drawing.Point(12, 208);
-            this.tbDebug.Multiline = true;
-            this.tbDebug.Name = "tbDebug";
-            this.tbDebug.ReadOnly = true;
-            this.tbDebug.Size = new System.Drawing.Size(266, 146);
-            this.tbDebug.TabIndex = 24;
-            // 
             // btnSync
             // 
             this.btnSync.Enabled = false;
-            this.btnSync.Location = new System.Drawing.Point(148, 179);
+            this.btnSync.Location = new System.Drawing.Point(148, 155);
             this.btnSync.Name = "btnSync";
             this.btnSync.Size = new System.Drawing.Size(75, 23);
             this.btnSync.TabIndex = 25;
@@ -178,9 +169,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(290, 366);
+            this.ClientSize = new System.Drawing.Size(290, 190);
             this.Controls.Add(this.btnSync);
-            this.Controls.Add(this.tbDebug);
             this.Controls.Add(this.lblRulesNum);
             this.Controls.Add(this.lblRules);
             this.Controls.Add(this.tbPort);
@@ -195,6 +185,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Name = "frmMain";
             this.Text = "HogDaemon";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
             this.Load += new System.EventHandler(this.frmMain_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -216,7 +207,6 @@
         private System.Windows.Forms.Label lblPort;
         private System.Windows.Forms.Label lblRules;
         private System.Windows.Forms.Label lblRulesNum;
-        private System.Windows.Forms.TextBox tbDebug;
         private System.Windows.Forms.Button btnSync;
     }
 }

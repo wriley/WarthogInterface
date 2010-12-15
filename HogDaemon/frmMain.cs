@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using System.Text;
 using WarthogInterface;
 using System.Threading;
+using System.IO;
 
 namespace WarthogInterface
 {
@@ -23,14 +24,17 @@ namespace WarthogInterface
         private int _port = -1;
         private UdpClient _udpClient;
         private bool _started = false;
+        private StreamWriter _logWriter;
+        private static string _logFile = "HogDaemon.log";
 
-        private const string S_ID           = "DeviceID";
-        private const string S_RULE         = "Rule";
-        private const string S_BUTTON       = "Button";
-        private const string S_SETTINGS     = "Settings";
-        private const string S_JOYSTICK     = "Joystick";
-        private const string S_HOSTNAME     = "Hostname";
-        private const string S_PORT         = "Port";
+        private const string S_ID = "DeviceID";
+        private const string S_RULE = "Rule";
+        private const string S_BUTTON = "Button";
+        private const string S_SETTINGS = "Settings";
+        private const string S_JOYSTICK = "Joystick";
+        private const string S_HOSTNAME = "Hostname";
+        private const string S_PORT = "Port";
+        private const string S_DEBUG = "Debug";
 
         public frmMain()
         {
@@ -48,8 +52,32 @@ namespace WarthogInterface
                 Application.Exit();
             }
 
+            try
+            {
+                if (File.Exists(_logFile))
+                {
+                    _logWriter = new StreamWriter(_logFile);
+                }
+                else
+                {
+                    _logWriter = File.AppendText(_logFile);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error opening logfile: " + ex.Message.ToString());
+            }
+
+            _logWriter.AutoFlush = true;
+
+            logger("Loading main form");
+
             _joystick = new Joystick(this.Handle);
+
+            logger("Getting devices");
             updateDeviceList();
+
+            logger("Loading INI file");
             loadINI();
         }
 
@@ -78,7 +106,7 @@ namespace WarthogInterface
             _commands.Clear();
             foreach (string s in _iniFileReader.AllSections)
             {
-                switch(s)
+                switch (s)
                 {
                     case S_SETTINGS:
                         string j = _iniFileReader.GetIniValue(s, S_JOYSTICK);
@@ -112,6 +140,7 @@ namespace WarthogInterface
                         {
                             Command c = new Command(s, id, button, rule);
                             _commands.Add(c);
+                            logger("Added command " + c.Name);
                         }
                         break;
                 }
@@ -348,8 +377,15 @@ namespace WarthogInterface
 
         private void logger(string s)
         {
-            string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.ffff");
-            tbDebug.AppendText(timestamp + " " + s + "\r\n");
+            string timestamp = DateTime.UtcNow.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss.ffff");
+            try
+            {
+                _logWriter.WriteLine(timestamp + " " + s);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error writing to log file: " + ex.Message.ToString());
+            }
         }
 
         private void btnSync_Click(object sender, EventArgs e)
@@ -368,6 +404,27 @@ namespace WarthogInterface
             {
                 sendToNetwork();
             }
+        }
+
+        private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            logger("Shutting down");
+            _started = false;
+            timer1.Enabled = false;
+            backgroundWorker1.CancelAsync();
+            if (_udpClient != null)
+            {
+                try
+                {
+                    _udpClient.Close();
+                }
+                catch (SocketException)
+                {
+                }
+            }
+
+            _logWriter.Flush();
+            _logWriter.Close();
         }
     }
 }
